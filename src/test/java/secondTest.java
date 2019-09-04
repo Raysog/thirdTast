@@ -23,7 +23,7 @@ public class secondTest {
 		@Test
 		public void secondTest() {
 			driver.navigate().to("http://www.sberbank.ru/ru/person");
-			WebElement button = driver.findElement(By.xpath("//div[contains(@class,'paste-region__region header__region header__region_77')]//div//div//span"));
+			WebElement button = driver.findElement(By.xpath("//span[ancestor::div[contains(@class, 'paste-region__region header__region header__region_')]]"));
 			button.click();
 			WebElement findCity = driver.findElement(By.xpath("//input[@class=\"kit-input__control\"][@type=\"search\"]"));
 			findCity.sendKeys("Нижегородская область\n");
@@ -32,11 +32,10 @@ public class secondTest {
 			WebElement footer = driver.findElement(By.xpath("//footer"));
 			((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", footer);
 			assertEquals("Присутствуют не все значки соц. сетей", 6, driver.findElements (By.xpath("//span[contains(@class,'footer__social_logo footer__social_')]")).size());
-			System.out.println("all right");
 		}
 		
 		@After
 	    public void stopTest() throws Exception {
-	        driver.quit();
+	        //driver.quit();
 	    }
 }

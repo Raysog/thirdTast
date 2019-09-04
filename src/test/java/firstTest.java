@@ -1,117 +1,116 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import static org.junit.Assert.assertEquals;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.interactions.Action;
-import org.openqa.selenium.interactions.SourceType;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.xml.sax.Locator;
 
 /**
  * Created by Ivan on 01.09.2019.
  */
-public class InsuranceClass {
+public class firstTest {
     /**
      * @param args
      */
-    public static void main(String[] args) {
-        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
-        driver.navigate().to("http://www.rgs.ru");
-        WebElement strahovanie = driver.findElement(By.xpath("//a[contains(text(), 'Страхование')]"));
-        System.out.println(strahovanie.toString());
-        strahovanie.click();
-        WebElement dms = strahovanie.findElement(By.xpath("//a[contains(text(), 'ДМС')]"));
-        System.out.println(dms.toString());
-        dms.click();
-        //System.out.println("no such element");
-        try {
-            driver.findElement(By.xpath("//h1[contains(text(), 'добровольное медицинское страхование')]"));
-            System.out.println("Заголовок существует");
-        } catch (NoSuchElementException ex) {
-            System.out.println("Заголовок не найден");
-        }
-        WebElement buttonOk = driver.findElement(By.xpath("//a[@class=\"btn btn-default text-uppercase hidden-xs adv-analytics-navigation-desktop-floating-menu-button\"]"));
-        System.out.println(buttonOk.toString());
-        buttonOk.click();
-        //driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
-        
-        List<WebElement> form = new ArrayList<WebElement>();
-        
-        By lastNameLocator = By.xpath("//input[@name=\"LastName\"]");
-        WebElement lastName = driver.findElement(lastNameLocator);
-        WebDriverWait lastNameWaiter = new WebDriverWait(driver, 5, 1000);
-        lastNameWaiter.until(ExpectedConditions.elementToBeClickable(lastNameLocator));
-        lastName.sendKeys("Фамилия");
-        form.add(lastName);
-        System.out.println(lastName.toString());
-        
-        By firstNameLocator = By.xpath("//input[@name=\"FirstName\"]");
-        WebElement firstName = driver.findElement(firstNameLocator);
-        WebDriverWait firstNameWaiter = new WebDriverWait(driver, 5, 1000);
-        firstNameWaiter.until(ExpectedConditions.elementToBeClickable(firstNameLocator));
-        firstName.sendKeys("Имя");
-        form.add(firstName);
-        System.out.println(firstName.toString());
-        
-        By middleNameLocator = By.xpath("//input[@name=\"MiddleName\"]");
-        WebElement middleName = driver.findElement(middleNameLocator);
-        WebDriverWait middleNameWaiter = new WebDriverWait(driver, 5, 1000);
-        middleNameWaiter.until(ExpectedConditions.elementToBeClickable(middleNameLocator));
-        middleName.sendKeys("Отчетсво");
-        form.add(middleName);
-        System.out.println(middleName.toString());
-        
-        WebElement selectElem = driver.findElement(By.tagName("select"));
-        Select select = new Select(selectElem);
-        select.selectByVisibleText("Москва");
-        form.add(selectElem);
-        System.out.println(selectElem.toString());
-        
-        
-        By phoneLocator = By.xpath("//input[contains(@data-bind,'Phone')]");
-        WebElement phone = driver.findElement(phoneLocator);
-        WebDriverWait phoneWaiter = new WebDriverWait(driver, 5, 1000);
-        phoneWaiter.until(ExpectedConditions.elementToBeClickable(phoneLocator));
-        phone.sendKeys("9999876543");
-        form.add(phone);
-        System.out.println(phone.toString());
-        
-        
-        By eMailLocator = By.xpath("//input[@name=\"Email\"]");
-        WebElement eMail = driver.findElement(eMailLocator);
-        WebDriverWait eMailWaiter = new WebDriverWait(driver, 5, 1000);
-        eMailWaiter.until(ExpectedConditions.elementToBeClickable(eMailLocator));
-        eMail.sendKeys("qwertyqwerty");
-        form.add(eMail);
-        System.out.println(eMail.toString());
-        
-        
-        By commentLocator = By.xpath("//textarea[@name=\"Comment\"]");
+	private WebDriver driver = null;
+	private Map<WebElement, String> enterValues = null;
+	
+		@Before
+	    public void startValues() throws Exception {
+	        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+	        driver = new ChromeDriver();
+	        enterValues = new HashMap<WebElement, String>();
+	    }
+	
+	 	@Test
+	    public void formTest(){
+	        driver.navigate().to("http://www.rgs.ru");
+	        
+	        WebElement strahovanie = driver.findElement(By.xpath("//a[contains(text(), 'Страхование')]"));
+	        strahovanie.click();
+	        
+	        WebElement dms = strahovanie.findElement(By.xpath("//a[contains(text(), 'ДМС')]"));
+	        dms.click();
+	        
+	        try {
+	            driver.findElement(By.xpath("//h1[contains(text(), 'добровольное медицинское страхование')]"));
+	            System.out.println("Заголовок существует");
+	        } catch (NoSuchElementException ex) {
+	            System.out.println("Заголовок не найден");
+	        }
+	        
+	        WebElement buttonOk = driver.findElement(By.xpath("//a[@class=\"btn btn-default text-uppercase hidden-xs adv-analytics-navigation-desktop-floating-menu-button\"]"));
+	        buttonOk.click();
+	        
+	        addText("//input[@name=\"LastName\"]", "Фамилия");
+	        addText("//input[@name=\"FirstName\"]", "Имя");
+	        addText("//input[@name=\"MiddleName\"]", "Отчетсво");
+	        addSelect("Москва", "77");  
+	        addPhone("//input[contains(@data-bind,'Phone')]", "(999) 987-65-43");      
+	        addText("//input[@name=\"Email\"]", "qwertyqwerty");
+	        addText("//textarea[@name=\"Comment\"]", "testtesttesttest");
+	        addCheckBox("//input[@class=\"checkbox\"]", "on");
+	        
+	        
+	        for (WebElement webElement : enterValues.keySet()) {
+	        	assertEquals("value of element \""+ webElement.getAttribute("name") + "\" is false",enterValues.get(webElement) , webElement.getAttribute("value")); 
+	    	}
+	        
+	        By buttonLocator = By.xpath("//button[@id=\"button-m\"]");
+	        WebElement button = driver.findElement(buttonLocator);
+	        button.click();
+	        assertEquals("У Поля Эл. почта не присутствует сообщение об ошибке Введите корректный email", 
+	        			 "Введите адрес электронной почты",  
+	        			 driver.findElement(By.xpath("//span[@class=\"validation-error-text\"]")).getAttribute("innerText"));
+	 	}
+	 	
+	 	@After
+	    public void stopTest() throws Exception {
+	        driver.quit();
+	    }
+    
+    private void addText(String xpath, String value) {
+    	By commentLocator = By.xpath(xpath);
         WebElement comment = driver.findElement(commentLocator);
         WebDriverWait commentWaiter = new WebDriverWait(driver, 5, 1000);
         commentWaiter.until(ExpectedConditions.elementToBeClickable(commentLocator));
-        comment.sendKeys("testtesttesttest");
-        form.add(comment);
-        System.out.println(comment.toString());
-        
-        By checkBoxLocator = By.xpath("//input[@class=\"checkbox\"]");
+        String commentValue = value;
+        comment.sendKeys(commentValue);
+        enterValues.put(comment, commentValue);
+    }
+    
+    private void addPhone(String xpath, String value) {
+    	By phoneLocator = By.xpath(xpath);
+        WebElement phone = driver.findElement(phoneLocator);
+        WebDriverWait phoneWaiter = new WebDriverWait(driver, 5, 1000);
+        phoneWaiter.until(ExpectedConditions.elementToBeClickable(phoneLocator));
+        String phoneValue = value;
+        phone.sendKeys(phoneValue);
+        enterValues.put(phone, "+7 " + phoneValue);
+    }
+    
+    private void addSelect(String textValue, String idValue) {
+    	WebElement selectElem = driver.findElement(By.tagName("select"));
+        Select select = new Select(selectElem);
+        String selectValue = textValue;
+        select.selectByVisibleText(selectValue);
+        enterValues.put(selectElem, idValue);
+    }
+    
+    private void addCheckBox(String xpath, String value) {
+    	By checkBoxLocator = By.xpath(xpath);
         WebElement checkBox = driver.findElement(checkBoxLocator);
         checkBox.click();
-        form.add(checkBox);
-        System.out.println(checkBox.toString());
-        
-        
-        
-
-        //driver.close();
+        String checkBoxValue = value;
+        enterValues.put(checkBox, checkBoxValue);
     }
 }
